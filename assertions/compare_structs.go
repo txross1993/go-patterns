@@ -16,7 +16,13 @@ func CompareOnlyNonNilTestFields(t *testing.T, expected interface{}, actual inte
 
 	for i := 0; i < elements.NumField(); i++ {
 		fieldName := typeOfExpected.Field(i).Name
-		if actualValue.FieldByName(fieldName) != expectedValue.FieldByName(fieldName) {
+		exp := expectedValue.FieldByName(fieldName)
+		if exp.IsZero() {
+			continue
+		}
+
+		act := actualValue.FieldByName(fieldName)
+		if exp.Interface() != act.Interface() {
 			return false
 		}
 	}
